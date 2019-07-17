@@ -20,6 +20,7 @@
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
         <fastjson>1.2.46</fastjson>
         <jedis>2.9.3</jedis>
+        <fastjson>1.2.46</fastjson>
     </properties>
 
     <dependencies>
@@ -32,6 +33,12 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson}</version>
         </dependency>
 
         <dependency>
