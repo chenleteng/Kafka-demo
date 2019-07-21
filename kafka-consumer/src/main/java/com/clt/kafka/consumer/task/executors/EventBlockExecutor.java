@@ -1,7 +1,8 @@
 package com.clt.kafka.consumer.task.executors;
 
-import com.clt.kafka.consumer.dao.SuUserInfoRepository;
+import com.clt.kafka.consumer.dao.TbItemRepository;
 import com.clt.kafka.consumer.server.EventService;
+import com.clt.kafka.consumer.task.executors.work.EventWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,11 +18,8 @@ public class EventBlockExecutor {
     @Resource
     private EventService eventService;
 
-//    @Resource
-//    private ParamVerifier paramVerifier;
-
     @Resource
-    private SuUserInfoRepository suUserInfoRepository;
+    private TbItemRepository tbItemRepository;
 
     //这个开多了，要考虑数据库连接数和数据库的QPS是否超过限制（要考虑是否qps高了会导致其他业务受影响）
     private final static int MAX_POOL_SIZE = 20;
@@ -65,7 +63,7 @@ public class EventBlockExecutor {
         do {
             reject = false;
             try {
-//                executor.execute(new EventWorker(paramVerifier,eventService,suUserInfoRepository,data));
+                executor.execute(new EventWorker(eventService,tbItemRepository,data));
             } catch (RejectedExecutionException e) {
                 logger.error("满啦满啦。{}", e.getMessage());
                 reject = true;

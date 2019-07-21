@@ -30,7 +30,7 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "entityManagerFactoryPrimary",
         transactionManagerRef = "transactionManagerPrimary",
-        basePackages = "com.qw.usdk.user.consumer.dao"
+        basePackages = "com.clt.kafka.consumer.dao"
 )
 public class PrimaryConfiguration {
 
@@ -67,7 +67,7 @@ public class PrimaryConfiguration {
         return builder
                 .dataSource(eventDataSource)
                 .properties(properties)
-                .packages("com.qw.usdk.user.consumer.entity")// 设置实体类所在位置
+                .packages("com.clt.kafka.consumer.entity")// 设置实体类所在位置
                 .persistenceUnit("primaryPersistenceUnit")
                 .build();
     }

@@ -20,7 +20,7 @@
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
         <fastjson>1.2.46</fastjson>
         <jedis>2.9.3</jedis>
-        <fastjson>1.2.46</fastjson>
+        <fastjson>1.2.58</fastjson>
     </properties>
 
     <dependencies>

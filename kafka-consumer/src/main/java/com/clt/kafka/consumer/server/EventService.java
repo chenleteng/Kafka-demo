@@ -1,6 +1,7 @@
 package com.clt.kafka.consumer.server;
 
 import com.alibaba.fastjson.JSON;
+import com.clt.kafka.consumer.config.redis.SimpleRedisTemplate;
 import com.clt.kafka.consumer.dto.EventOffset;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -25,8 +26,8 @@ public class EventService {
         return String.format(EVENT_OFFSET_KEY, consumerId, topic, partition);
     }
 
-//    @Resource
-//    private SimpleRedisTemplate actRedisTemplate;
+    @Resource
+    private SimpleRedisTemplate actRedisTemplate;
 
     private String getKey(String data) {
         CRC32 crc32 = new CRC32();
@@ -34,23 +35,23 @@ public class EventService {
         return KEY_PREFIX + Long.toHexString(crc32.getValue()) + "-" + DigestUtils.md5Hex(data);
     }
 
-//    public boolean exists(String data) {
-//        return actRedisTemplate.exists(getKey(data));
-//    }
+    public boolean exists(String data) {
+        return actRedisTemplate.exists(getKey(data));
+    }
 
-//    public void cache(String data) {
-//        actRedisTemplate.setString(getKey(data), "1", ONE_DAY_SECONDS);
-//    }
-//
-//    public void saveOffset(EventOffset eventOffset) {
-//        String key = getEventOffsetKey(eventOffset.getConsumerId(), eventOffset.getTopic(), eventOffset.getPartition());
-//        actRedisTemplate.setString(key, JSON.toJSONString(eventOffset));
-//    }
-//
-//    public EventOffset getOffset(String consumerId, String topic, Integer partition) {
-//        String key = getEventOffsetKey(consumerId, topic, partition);
-//        String val = actRedisTemplate.getString(key);
-//        return val == null ? null : JSON.parseObject(val, EventOffset.class);
-//    }
+    public void cache(String data) {
+        actRedisTemplate.setString(getKey(data), "1", ONE_DAY_SECONDS);
+    }
+
+    public void saveOffset(EventOffset eventOffset) {
+        String key = getEventOffsetKey(eventOffset.getConsumerId(), eventOffset.getTopic(), eventOffset.getPartition());
+        actRedisTemplate.setString(key, JSON.toJSONString(eventOffset));
+    }
+
+    public EventOffset getOffset(String consumerId, String topic, Integer partition) {
+        String key = getEventOffsetKey(consumerId, topic, partition);
+        String val = actRedisTemplate.getString(key);
+        return val == null ? null : JSON.parseObject(val, EventOffset.class);
+    }
 
 }

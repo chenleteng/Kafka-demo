@@ -11,21 +11,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@ConfigurationProperties(prefix = "spring.kafka.consumer")
+@ConfigurationProperties(prefix = "kafka.consumer")
 public class KafkaConsumerConfig {
 
-    private String bootstrapServers;
+    private String servers;
     private String groupId;
     private boolean enableAutoCommit;
-    private Integer autoCommitInterval;
-    private String autoOffsetReset;
 
-    public String getBootstrapServers() {
-        return bootstrapServers;
+    public boolean isEnableAutoCommit() {
+        return enableAutoCommit;
     }
 
-    public void setBootstrapServers(String bootstrapServers) {
-        this.bootstrapServers = bootstrapServers;
+    public void setEnableAutoCommit(boolean enableAutoCommit) {
+        this.enableAutoCommit = enableAutoCommit;
+    }
+
+    public String getServers() {
+        return servers;
+    }
+
+    public void setServers(String servers) {
+        this.servers = servers;
     }
 
     public String getGroupId() {
@@ -37,23 +43,6 @@ public class KafkaConsumerConfig {
         this.groupId = groupId;
 
     }
-
-    public Integer getAutoCommitInterval() {
-        return autoCommitInterval;
-    }
-
-    public void setAutoCommitInterval(Integer autoCommitInterval) {
-        this.autoCommitInterval = autoCommitInterval;
-    }
-
-    public String getAutoOffsetReset() {
-        return autoOffsetReset;
-    }
-
-    public void setAutoOffsetReset(String autoOffsetReset) {
-        this.autoOffsetReset = autoOffsetReset;
-    }
-
     @Bean
     public KafkaConsumer<byte[], byte[]> kafkaConsumer() {
         return new KafkaConsumer<>(consumerConfigs());
@@ -62,7 +51,7 @@ public class KafkaConsumerConfig {
     @Bean
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
         //props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "3000");
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");

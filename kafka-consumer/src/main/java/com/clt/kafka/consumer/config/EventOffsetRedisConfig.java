@@ -1,7 +1,7 @@
 package com.clt.kafka.consumer.config;
 
-import com.qw.support.springboot.common.config.redis.RedisDatabase;
-import com.qw.support.springboot.common.config.redis.SimpleRedisTemplate;
+import com.clt.kafka.consumer.config.redis.RedisDatabase;
+import com.clt.kafka.consumer.config.redis.SimpleRedisTemplate;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

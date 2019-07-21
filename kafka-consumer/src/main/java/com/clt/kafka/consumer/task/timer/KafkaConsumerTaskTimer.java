@@ -5,6 +5,7 @@ import com.clt.kafka.consumer.dto.EventOffset;
 import com.clt.kafka.consumer.log.LogFactory;
 import com.clt.kafka.consumer.server.EventService;
 import com.clt.kafka.consumer.task.executors.EventBlockExecutor;
+import com.clt.kafka.consumer.util.ZipUtils;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
@@ -101,25 +102,25 @@ public class KafkaConsumerTaskTimer {
         }
 
         private void seek(Collection<TopicPartition> collection, final String from) {
-//            collection.forEach(partition -> {
-//                EventOffset offset = eventService.getOffset(
-//                        consumerId,
-//                        partition.topic(), partition.partition());
-//                if (offset != null) {
-//                    if (offset.getOffset() == null) {
-//                        logger.info("定位Kafka位置offset, {} seekToEnd, topic={},partition={}", from, partition.topic(), partition.partition());
-//                        //kafkaConsumer.seekToEnd(Collections.singleton(partition));
-//                        kafkaConsumer.seekToEnd(Arrays.asList(partition));
-//                    } else {
-//                        logger.info("定位Kafka位置offset, {} seek, offset={}", from, JSON.toJSONString(offset));
-//                        kafkaConsumer.seek(partition, offset.getOffset());
-//                    }
-//                } else {
-//                    logger.info("null 定位Kafka位置offset, {} seekToEnd, topic={},partition={}", from, partition.topic(), partition.partition());
-//                    //kafkaConsumer.seekToEnd(Collections.singleton(partition));
-//                    kafkaConsumer.seekToEnd(Arrays.asList(partition));
-//                }
-//            });
+            collection.forEach(partition -> {
+                EventOffset offset = eventService.getOffset(
+                        consumerId,
+                        partition.topic(), partition.partition());
+                if (offset != null) {
+                    if (offset.getOffset() == null) {
+                        logger.info("定位Kafka位置offset, {} seekToEnd, topic={},partition={}", from, partition.topic(), partition.partition());
+                        //kafkaConsumer.seekToEnd(Collections.singleton(partition));
+                        kafkaConsumer.seekToEnd(Arrays.asList(partition));
+                    } else {
+                        logger.info("定位Kafka位置offset, {} seek, offset={}", from, JSON.toJSONString(offset));
+                        kafkaConsumer.seek(partition, offset.getOffset());
+                    }
+                } else {
+                    logger.info("null 定位Kafka位置offset, {} seekToEnd, topic={},partition={}", from, partition.topic(), partition.partition());
+                    //kafkaConsumer.seekToEnd(Collections.singleton(partition));
+                    kafkaConsumer.seekToEnd(Arrays.asList(partition));
+                }
+            });
         }
 
         private long sleepTime = 0;
@@ -156,8 +157,7 @@ public class KafkaConsumerTaskTimer {
                     try {
 
                         byte[] value = record.value();
-//                        String data = new String(ZipUtils.unzip(value));
-                        String data = "";
+                        String data = new String(ZipUtils.unzip(value));
                         if (value.length > 20) {
                             kafkaConsumerLogger.info("消费到数据:{},topic={},partition={},offset={}", value, record.topic(), record.partition(), record.offset());
                             eventBlockExecutor.doEvent(data, record.topic());
@@ -183,7 +183,7 @@ public class KafkaConsumerTaskTimer {
             });
 
             if (offsets.size() > 0) offsets.forEach(o -> {
-//                eventService.saveOffset(o);
+                eventService.saveOffset(o);
             });
 
         }
